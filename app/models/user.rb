@@ -5,18 +5,17 @@ class User < ActiveRecord::Base
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
 
-
-  devise :database_authenticatable, :registerable, :omniauthable,
-         :recoverable, :rememberable, :trackable, :validatable
-
-
   # Setup accessible (or protected) attributes for your model
   attr_accessor :email, :password, :password_confirmation, :remember_me
 
 
-	def self.find_for_oauth(auth)
-	    record = where(tumblr_name: auth.uid.to_s).first
-	    record || create(tumblr_name: auth.uid, email: 'user@email.com', password: Devise.friendly_token[0,20])
+	def set_params params
+		self.tumblr_name = params[:uid]
 	end
 
+	def set_blogs params
+		params[:extra][:raw_info][:blogs].each do |blog|
+			self.blogs.create(:name => blog[:name])
+		end
+	end
 end

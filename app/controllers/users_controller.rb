@@ -1,25 +1,46 @@
 class UsersController < ApplicationController
 
   def check
+  	if registered_user? auth_params
+      set_session User.find_by_tumblr_name auth_params[:uid]
+  		redirect_to main_path
+  	else
+  		create
+  	end
   end
 
   def create
-  	 @user = User.find_for_oauth(auth_params)
-
-    if user.persisted?
-      flash[:notice] = I18n.t "devise.omniauth_callbacks.success", :kind => "Tumblr"
-      sign_in_and_redirect user, :event => :authentication
-    else
-      session["devise.tumblr_data"] = request.env["omniauth.auth"]
-      redirect_to new_user_registration_url
-    end
+  	@user = User.new
+  	@user.set_params auth_params
+  	@user.save
+  	@user.set_blogs auth_params
+  	if @user.save
+  		set_session @user
+  		redirect_to main_path
+  	else
+  		render :text => 'Error saving user to db.'
+  	end
   end
 
   def show
+  	@user = User.find current_user
+  end
+
+  def logout
+    reset_session
+    redirect_to root_path
   end
 
   private
+  	def set_session user
+  		session[:user_id] = user.id
+  	end
+
   	def auth_params
   		request.env["omniauth.auth"]
+  	end
+
+  	def registered_user? auth
+  		true unless !User.find_by_tumblr_name auth[:uid]
   	end
 end

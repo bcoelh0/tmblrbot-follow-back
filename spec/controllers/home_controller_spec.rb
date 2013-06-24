@@ -3,7 +3,14 @@ require 'spec_helper'
 describe HomeController do
 
 	before do
-		request.env["omniauth.auth"] = {:uid => 'tmblrb'}
+		OmniAuth.config.mock_auth[:tumblr] = {
+    		'uid' => 'tmblrb',
+		    'provider' => 'tumblr',
+		    'info' => {
+		      'name' => 'Tmblr Bot'
+		    }
+		  }
+		request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:tumblr]
 	end
 
 
@@ -18,8 +25,8 @@ describe HomeController do
 		@user.blogs.create!(:name => 'my_blog', :description => 'big ass text.....', :followers => 1234)
 	end
 
-	it "logs users in" do
-		new_user_session_path
-	end
+
+
+
 
 end

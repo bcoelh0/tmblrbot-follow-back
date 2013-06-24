@@ -1,1 +1,14 @@
-%h1 Logged
+%h1 Promo Feed
+
+%p= link_to 'Logout', logout_path, :id=> 'logout'
+
+%ul.users
+- @feed.each do |blog_id|
+	-blog = Blog.find(blog_id)
+	-user = User.find(blog.user)
+	%li
+		= image_tag user.avatar, :class => 'user_avatar'
+		%h4{:id => 'blog_link' }= link_to blog.name, 'http://'+blog.name+'.tumblr.com'
+		%p=blog.description
+		=link_to (image_tag 'http://cdn2.iconfinder.com/data/icons/flat-ui-icons-24-px/24/plus-24-32.png'), 'http://tumblr.com'
+

@@ -50,6 +50,7 @@ gem "haml-rails", "~> 0.4"
 gem "therubyracer"
 gem "less-rails"
 gem "twitter-bootstrap-rails"
-gem 'devise', :github => 'plataformatec/devise', :branch => 'rails4'
+#gem 'devise', :github => 'plataformatec/devise', :branch => 'rails4'
 gem 'omniauth', :github => 'intridea/omniauth'
 gem 'omniauth-tumblr'
+gem 'webrat'
